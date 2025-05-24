@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+		http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.scijava</groupId>
+		<artifactId>pom-scijava</artifactId>
+		<version>31.0.0</version>
+		<relativePath />
+	</parent>
+
+	<groupId>ac.loong.tools</groupId>
+	<artifactId>Remove_Dirty_Stains</artifactId>
+	<!-- 命名（文件名）必须带有下划线的格式，也可以生成后手动重命名jar，不然imagej1识别不了 ，imagej2好像可以-->
+	<version>1.0.1</version>
+
+	<name>Remove Dirty Stains</name>
+	<description>Remove dirty stains from a sample image using a flat-field image that does not always have the same brightness.</description> 
+	<url>https://github.com/DragonLingLuo/Remove-Dirty-Stains</url>
+	<inceptionYear>2025</inceptionYear>
+	<licenses>
+		<license>
+			<name>Apache 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<!-- See https://imagej.net/Team -->
+		<developer>
+			<id>lingluo</id>
+			<name>Lingluo Long</name>
+			<url>https://github.com/DragonLingLuo</url>
+			<roles>
+				<role>founder</role>
+				<role>lead</role>
+				<role>developer</role>
+				<role>debugger</role>
+				<role>reviewer</role>
+				<role>support</role>
+				<role>maintainer</role>
+			</roles>
+		</developer>
+	</developers>
+	<contributors>
+		<contributor>
+			<name>None</name>
+		</contributor>
+	</contributors>
+
+	<scm>
+		<connection>scm:git:https://github.com/DragonLingLuo/Remove-Dirty-Stains</connection>
+		<developerConnection>scm:git:git@github.com:DragonLingLuo/Remove-Dirty-Stains</developerConnection>
+		<tag>HEAD</tag>
+		<url>https://github.com/DragonLingLuo/Remove-Dirty-Stains</url>
+	</scm>
+	<issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/DragonLingLuo/Remove-Dirty-Stains/issues</url>
+	</issueManagement>
+	<ciManagement>
+		<system>None</system>
+	</ciManagement>
+
+	<properties>
+		<package-name>ac.loong.tools.ijpi</package-name>
+		<main-class>ac.loong.tools.ijpi.RemoveDirtyStains</main-class>
+		<license.licenseName>Apache 2.0</license.licenseName>
+		<license.copyrightOwners>Lingluo Long</license.copyrightOwners>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>ij</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>
