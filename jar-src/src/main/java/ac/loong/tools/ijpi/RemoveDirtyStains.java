@@ -26,6 +26,7 @@ import ij.measure.ResultsTable;
 import ij.plugin.filter.BackgroundSubtracter;
 import ij.plugin.filter.GaussianBlur;
 import ij.plugin.filter.ParticleAnalyzer;
+import ij.plugin.frame.Recorder;
 import ij.process.Blitter;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
@@ -96,6 +97,7 @@ public class RemoveDirtyStains implements PlugIn {
                 // IJ.log("Plugin canceled by user."); 
                 return;
             }
+            
 
             if (isPreviewModeActive && currentPreviewDisplayTargetImp != null
                     && originalProcessorOfDisplayTarget != null) {
@@ -112,8 +114,10 @@ public class RemoveDirtyStains implements PlugIn {
             }
 
             // --- User clicked OK: Get parameters and process ---
-            ImagePlus sampleImp = WindowManager.getImage(titles[gd.getNextChoiceIndex()]);
-            ImagePlus flatImp = WindowManager.getImage(titles[gd.getNextChoiceIndex()]); 
+            int dirtyChoiceIdx = gd.getNextChoiceIndex();
+            ImagePlus sampleImp = WindowManager.getImage(titles[dirtyChoiceIdx]);
+            int flatChoiceIdx = gd.getNextChoiceIndex();
+            ImagePlus flatImp = WindowManager.getImage(titles[flatChoiceIdx]);
             double expandRatio = gd.getNextNumber();
             int percentile = (int) gd.getNextNumber();
             boolean pffcEnabled = gd.getNextBoolean();
@@ -124,6 +128,40 @@ public class RemoveDirtyStains implements PlugIn {
             boolean previewDialogValue = gd.getNextBoolean();
             boolean hidePffcBackgroundViewDialog = gd.getNextBoolean();
             this.debugMode = gd.getNextBoolean();
+
+            //可能是因为DialogListener的引入，现在macro recorder不能自动记录各个参数生成命令了，虽然还是能读取命令并执行，所以要手动构造命令参数
+            // --- Manual Macro Options Recording via Recorder.recordOption ---
+            if (Recorder.record && !IJ.isMacro()) {
+                // Important: The keywords used here MUST be the first word of the
+                // label you used when adding the component to GenericDialog, in lowercase.
+                // Example: if label was "Dirty image:", keyword is "dirty".
+
+                Recorder.recordOption("dirty", titles[dirtyChoiceIdx]);
+                Recorder.recordOption("flat", titles[flatChoiceIdx]);
+                Recorder.recordOption("peripheral", IJ.d2s(expandRatio, 2));
+                Recorder.recordOption("percentage", Integer.toString(percentile)); // Ensure value is a string
+
+                if (pffcEnabled) {
+                    Recorder.recordOption("pffc"); // Keyword from "PFFC (Pseudo Flat-Field...)" label
+                    // Keyword for radius from "Radius of PFFC (pixels):" label
+                    Recorder.recordOption("radius", IJ.d2s(pffcRadius, (int) pffcRadius == pffcRadius ? 0 : 1));
+                }
+                if (keepSourceWindow) {
+                    Recorder.recordOption("keep"); // Keyword from "Keep source window..." label
+                }
+                if (autoConvert) {
+                    Recorder.recordOption("auto-convert"); // Keyword from "Auto-convert flat field..." label
+                }
+                if (previewDialogValue) {
+                    Recorder.recordOption("preview"); // Keyword from "Preview" label
+                }
+                if (hidePffcBackgroundViewDialog) {
+                    Recorder.recordOption("hide"); // Keyword from "Hide PFFC background view..." label
+                }
+                if (this.debugMode) {
+                    Recorder.recordOption("debug"); // Keyword from "Debug mode" label
+                }
+            }
 
             // Parameter Validation
             if (expandRatio < 0 || expandRatio > 1.0) {
